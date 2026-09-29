@@ -1,0 +1,9 @@
+casum_env/
+venv/
+*.h5
+*.rar
+*.zip
+*.pth
+*.tar
+*.pkl
+__pycache__/
