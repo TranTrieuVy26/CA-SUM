@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--path", type=str,
                     default=r'C:\Users\DELL\CA-SUM\Summaries\exp1\reg0.6\SumMe\results\split0',
                     help="Path to the json files with the scores of the frames for each epoch")
-parser.add_argument("--dataset", type=str, default='SumMe', help="Dataset to be used")
+parser.add_argument("--dataset", type=str, default='SumMe', help="Dataset to be used (SumMe or TVSum)")
 parser.add_argument("--eval", type=str, default="max", help="Eval method to be used for f_score reduction (max or avg)")
 
 args = vars(parser.parse_args())
@@ -23,9 +23,11 @@ eval_method = args["eval"]
 results = [f for f in listdir(path) if f.endswith(".json")]
 results.sort(key=lambda video: int(video[6:-5]))
 
-# ===== SỬA ĐƯỜNG DẪN FILE H5 CHO ĐÚNG MÁY BẠN =====
-dataset_path = r'C:\Users\DELL\CA-SUM\model\data\TVSum\eccv16_dataset_tvsum_google_pool5.h5'
-# Nếu file H5 nằm chỗ khác, sửa dòng trên cho đúng
+# ===== TỰ ĐỘNG CHỌN ĐƯỜNG DẪN H5 THEO TẬP DỮ LIỆU =====
+if dataset.lower() == 'summe':
+    dataset_path = r'C:\Users\DELL\CA-SUM\model\data\SumMe\eccv16_dataset_summe_google_pool5.h5'
+else:
+    dataset_path = r'C:\Users\DELL\CA-SUM\model\data\TVSum\eccv16_dataset_tvsum_google_pool5.h5'
 
 f_score_epochs = []
 for epoch in results:                       # for each epoch ...
@@ -51,6 +53,7 @@ for epoch in results:                       # for each epoch ...
             all_nframes.append(n_frames)
             all_positions.append(positions)
 
+    # ĐÃ CĂN LỀ THỤT LÙI CHUẨN 4 SPACES DƯỚI ĐÂY
     all_summaries = generate_summary(all_shot_bound, all_scores, all_nframes, all_positions)
 
     all_f_scores = []
